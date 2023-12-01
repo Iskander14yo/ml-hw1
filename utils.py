@@ -16,7 +16,7 @@ def prepare_data(df: pd.DataFrame) -> pd.DataFrame:
     df.drop('torque', axis=1, inplace=True)
 
     # Вычисление медиан и заполнение ими пропусков
-    with open('medians.pkl', 'rb') as f:
+    with open('pkl/medians.pkl', 'rb') as f:
         medians = pickle.load(f)
     df[['mileage', 'engine', 'max_power', 'seats']] = df[['mileage', 'engine',
                                                           'max_power', 'seats']].fillna(medians)
@@ -32,7 +32,7 @@ def prepare_data(df: pd.DataFrame) -> pd.DataFrame:
 
     df['seats'] = df['seats'].astype('object')
 
-    with open('ohe_encoder.pkl', 'rb') as f:
+    with open('pkl/ohe_encoder.pkl', 'rb') as f:
         encoder = pickle.load(f)
     df_cat = df.select_dtypes(['object'])
     df_cat_encoded = encoder.transform(df_cat)
@@ -45,7 +45,7 @@ def prepare_data(df: pd.DataFrame) -> pd.DataFrame:
 
 def make_inference(df: pd.DataFrame) -> np.array:
     df = prepare_data(df)
-    with open('model.pkl', 'rb') as f:
+    with open('pkl/model.pkl', 'rb') as f:
         model = pickle.load(f)
     pred = model.predict(df)
     return pred
